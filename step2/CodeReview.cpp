@@ -21,6 +21,9 @@ like to work with and to understand my judgement. With that said, I'll do my bes
 2. Change code only when obvious.
 3. Giving my opinons where warranted.
 
+I should note that I haven't done much work with microsoft windows apis lately. So my familiarity 
+is a bit rusty. But I believe the contents should have merit regardless.
+
 */
 
 
@@ -81,7 +84,7 @@ bool queryWindowsForAVSoftwareDataWSC(std::map<std::wstring, ThirdPartyAVSoftwar
             continue; //Why do we continue here? (and all the other times? Shouldn't we fail?)
         }
 
-        hr = PtrProduct->get_ProductName(&PtrVal);
+        hr = PtrProduct->get_ProductName(&PtrVal); //I believe this api directly returns the name instead of using it like a side effect.
         if (FAILED(hr))
         {
             PtrProduct->Release();
@@ -91,7 +94,7 @@ bool queryWindowsForAVSoftwareDataWSC(std::map<std::wstring, ThirdPartyAVSoftwar
 
         displayName = std::wstring(PtrVal, SysStringLen(PtrVal));
 
-        hr = PtrProduct->get_ProductState(&ProductState);
+        hr = PtrProduct->get_ProductState(&ProductState); //I believe this api also returns the name.
         if (FAILED(hr))
         {
             std::cout << "Failed to query AV product state.";
