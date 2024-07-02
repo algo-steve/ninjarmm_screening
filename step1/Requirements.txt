@@ -1,6 +1,6 @@
 1. Write a small program in C++ that will contain the following:
-	a. Create a class Job
-	b. Create a subclass Programmer
+	a. Create a class Job - done
+	b. Create a subclass Programmer 
 	c. Create a subclass Pilot
 	d. The job class should provide an interface that does at least 4 actions. 
 		i. Please decide what 4 actions you would like your job to do, with each action being represented as a function.
