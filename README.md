@@ -1,3 +1,10 @@
+My readme stuff:
+
+Steven Johnson
+
+Note: I didn't include "rule of 5" other such stuff (rule of 3, 7) because I thought it would just clutter things. But I would assure you I know what they are.
+
+
 # Welcome!
 Thank you for considering NinjaRMM as your future home. In this repository you'll find some of our screening materials that we expect you to complete. The folder structure is explained below. 
 

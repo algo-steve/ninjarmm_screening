@@ -7,12 +7,60 @@
 #include<sstream>
 #include<numeric>
 #include<filesystem>
-#include "job.h"
-#include "programmer.h"
-#include "pilot.h"
+#include <tuple>
+#include <type_traits>
 
 namespace fs = std::filesystem;
 using vec2dstrings = std::vector<std::vector<std::string>>;
+
+
+class Job { //requirement a
+public:
+    virtual void Work() const = 0;
+    virtual void TakeBreak() const = 0;
+    virtual void Train() const = 0;
+    virtual void GetSalary() const = 0;
+    virtual ~Job() = default;
+};
+
+class Pilot : public Job { // requirement c
+public:
+    //requirement d
+    void Work() const override {
+        std::cout << "Pilot is flying." << std::endl;
+    }
+
+    void TakeBreak() const override {
+        std::cout << "Pilot is taking a rest." << std::endl;
+    }
+
+    void Train() const override {
+        std::cout << "Pilot is attending a safety briefing." << std::endl;
+    }
+
+    void GetSalary() const override {
+        std::cout << "Pilot received salary." << std::endl;
+    }
+};
+
+class Programmer : public Job { //requirement b
+public: 
+    void Work() const override {
+        std::cout << "Programmer is coding." << std::endl;
+    }
+
+    void TakeBreak() const override {
+        std::cout << "Programmer is taking a coffee break." << std::endl;
+    }
+
+    void Train() const override {
+        std::cout << "Programmer is attending a coding seminar." << std::endl;
+    }
+
+    void GetSalary() const override {
+        std::cout << "Programmer received salary." << std::endl;
+    }
+};
 
 template <typename T>
 bool IsInBounds(T value, T lower, T upper) {
@@ -97,6 +145,43 @@ void cleanup_before_run()
     }
 }
 
+// Requirement k
+
+// This is borderline unreadable but it does show variadic templates and some show off knowledge.
+// This section of code reverse the templates provided to an aribtrary type.
+// I know of no real use for it other than showing off template metaprogramming.
+
+namespace detail {
+template <template <typename...> class, typename...>
+struct reverse_impl;
+
+// Base case for the emptied Container
+template <template <typename...> class Container>
+struct reverse_impl<Container> {
+  template <typename... Acc>
+  using type = Container<Acc...>;
+};
+
+// Input type
+template <template <typename...> class Container, typename Hd, typename... Tl>
+struct reverse_impl<Container, Hd, Tl...> {
+  // Output type
+  template <typename... Acc>
+  using type = typename reverse_impl<Container, Tl...>::template type<Hd, Acc...>;
+};
+} 
+
+template <typename>
+struct reverse;
+template <template <typename...> class Container, typename... List>
+struct reverse<Container<List...>> {
+  using type = typename detail::template reverse_impl<Container, List...>::template type<>;
+};
+
+struct Test {}; // aa silly arbitrary type
+
+
+
 int main()
 {
     //requirements e and f
@@ -126,5 +211,10 @@ int main()
     //requirement j
     cleanup_before_run();
     do_csv_requirement();
+
+    //requirement k implementation [explained above in other req k section]
+    using my_tuple = std::tuple<Test, bool, char>;
+    static_assert(std::is_same<typename reverse<my_tuple>::type, std::tuple<char, bool, Test>>::value, "");
+    
     return 0;
 }
