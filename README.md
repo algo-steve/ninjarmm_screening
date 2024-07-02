@@ -4,6 +4,8 @@ Steven Johnson
 
 Note: I didn't include "rule of 5" other such stuff (rule of 3, 7) because I thought it would just clutter things. But I would assure you I know what they are.
 
+Unit tests - marshalling this package to use a test framework would involve reading a make utility (cmake, etc) and I have no guarantee you have this installed. This set, I wrote some tests that assume gtest is installled properly and chose to use cmake.
+
 
 # Welcome!
 Thank you for considering NinjaRMM as your future home. In this repository you'll find some of our screening materials that we expect you to complete. The folder structure is explained below. 

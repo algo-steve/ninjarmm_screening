@@ -30,4 +30,8 @@
 *.exe
 *.out
 *.app
+
+# csvs
+*.csv
+
 step2/~$quirements.docx

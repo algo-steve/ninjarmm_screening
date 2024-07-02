@@ -1,4 +1,5 @@
 {
+    "C_Cpp.clang_format_fallbackStyle": "{ BasedOnStyle: llvm, IndentWidth: 4, UseTab: Never, BreakBeforeBraces: Allman, AllowShortFunctionsOnASingleLine: Empty, AllowShortIfStatementsOnASingleLine: false, AllowShortLoopsOnASingleLine: false }",
     "files.associations": {
         "any": "cpp",
         "array": "cpp",
