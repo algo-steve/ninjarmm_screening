@@ -5,10 +5,13 @@
 #include<functional>
 #include<fstream>
 #include<sstream>
+#include<numeric>
+#include<filesystem>
 #include "job.h"
 #include "programmer.h"
 #include "pilot.h"
 
+namespace fs = std::filesystem;
 using vec2dstrings = std::vector<std::vector<std::string>>;
 
 template <typename T>
@@ -20,7 +23,8 @@ int ContainsTheString(const std::function<bool(const std::string&)>& test, const
     return std::count_if(collection.begin(), collection.end(), test);
 }
 
-void writeExampleCSV(const std::string& filename) {
+void writeExampleCSV(const std::string& filename) 
+{
     std::ofstream file(filename);
     file << "id,type,name\n";
     file << "0,bird,blue\n";
@@ -29,7 +33,8 @@ void writeExampleCSV(const std::string& filename) {
     file.close();
 }
 
-vec2dstrings readCSV(const std::string& filename) {
+vec2dstrings readCSV(const std::string& filename) 
+{
     std::ifstream file(filename);
     vec2dstrings data;
     std::string line;
@@ -44,7 +49,8 @@ vec2dstrings readCSV(const std::string& filename) {
     return data;
 }
 
-vec2dstrings transpose(const vec2dstrings& data) {
+vec2dstrings transpose(const vec2dstrings& data) 
+{
     if (data.empty()) return {};
     vec2dstrings transposed(data[0].size(), std::vector<std::string>(data.size()));
     for (auto i = 0; i < data.size(); ++i) {
@@ -53,6 +59,42 @@ vec2dstrings transpose(const vec2dstrings& data) {
         }
     }
     return transposed;
+}
+
+void writeCSV(const std::string& filename, const vec2dstrings& data) 
+{
+    std::ofstream file(filename);
+    for (const auto& row : data) 
+    {
+        file << accumulate(next(row.begin()), row.end(), row[0], 
+                           [](std::string a, const std::string& b) { return a + ',' + b; }) << '\n';
+    }
+    file.close();
+}
+
+void do_csv_requirement()
+{
+    std::string inputFile = "example.csv";
+    std::string outputFile = "transposed_example.csv";
+
+    writeExampleCSV(inputFile);
+    auto data = readCSV(inputFile);
+    auto transposedData = transpose(data);
+    writeCSV(outputFile, transposedData);
+
+    std::cout << "CSV transposed successfully.\n";
+}
+
+void cleanup_before_run()
+{
+    fs::path currentPath = fs::current_path();
+    for (const auto& entry : fs::directory_iterator(currentPath)) 
+    {
+        if (entry.is_regular_file() && entry.path().extension() == ".csv") 
+        {
+            fs::remove(entry.path());
+        }
+    }
 }
 
 int main()
@@ -80,5 +122,9 @@ int main()
     auto theStrings = std::vector<std::string>{"one", "two", "test"};
     auto count = ContainsTheString([](const std::string& tested) { return tested == "test"; }, theStrings);
     std::cout << "Number of 'test' strings: " << count << std::endl;
+
+    //requirement j
+    cleanup_before_run();
+    do_csv_requirement();
     return 0;
 }
