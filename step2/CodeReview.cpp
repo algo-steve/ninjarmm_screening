@@ -10,6 +10,19 @@ Comments are encouraged.
 
 */
 
+/* Review:
+
+This exercise asks me to review code as I would in reality. Usually, I review code on a PR so this is a little unusual.
+I also do not normally change a lot of code (beyond obvious stuff like descriptions/typos) without the submitter's 
+input, so this is also unusual for me. But I believe the objective here is to just get a general style on what I'm
+like to work with and to understand my judgement. With that said, I'll do my best by:
+
+1. Adding comments where necessary.
+2. Change code only when obvious.
+3. Giving my opinons where warranted.
+
+*/
+
 
 struct ThirdPartyAVSoftware
 {
@@ -24,17 +37,21 @@ struct ThirdPartyAVSoftware
 bool queryWindowsForAVSoftwareDataWSC(std::map<std::wstring, ThirdPartyAVSoftware>& thirdPartyAVSoftwareMap)
 {
     HRESULT hr = S_OK;
-    IWscProduct* PtrProduct = nullptr;
+    IWscProduct* PtrProduct = nullptr; //Smart pointers instead of raw pointers here.
     IWSCProductList* PtrProductList = nullptr;
     BSTR PtrVal = nullptr;
     LONG ProductCount = 0;
     WSC_SECURITY_PRODUCT_STATE ProductState;
     WSC_SECURITY_SIGNATURE_STATUS ProductStatus;
 
+    //putting these declarations nearer to their implementatino would make it much more readable
     std::wstring displayName, versionNumber, state, timestamp;
     std::string definitionState;
 
     hr = CoCreateInstance(__uuidof(WSCProductList), NULL, CLSCTX_INPROC_SERVER, __uuidof(IWSCProductList), reinterpret_cast<LPVOID*>(&PtrProductList));
+
+    //None of these results show the error code. If one runs into this error one knows that
+    //there was an issue but not the error code behind it. Please add that.
     if (FAILED(hr))
     {
         std::cout << "Failed to create WSCProductList object. ";
@@ -55,13 +72,13 @@ bool queryWindowsForAVSoftwareDataWSC(std::map<std::wstring, ThirdPartyAVSoftwar
         return false;
     }
 
-    for (uint32_t i = 0; i < ProductCount; i++)
+    for (uint32_t i = 0; i < ProductCount; i++) //I would use an "auto" here instead of Microsoft's strange int choices.
     {
         hr = PtrProductList->get_Item(i, &PtrProduct);
         if (FAILED(hr))
         {
             std::cout << "Failed to query AV product.";
-            continue;
+            continue; //Why do we continue here? (and all the other times? Shouldn't we fail?)
         }
 
         hr = PtrProduct->get_ProductName(&PtrVal);
@@ -109,14 +126,15 @@ bool queryWindowsForAVSoftwareDataWSC(std::map<std::wstring, ThirdPartyAVSoftwar
             std::cout << "Failed to query AV product definition state.";
             continue;
         }
-        timestamp = std::wstring(PtrVal, SysStringLen(PtrVal));
-        SysFreeString(PtrVal);
+        timestamp = std::wstring(PtrVal, SysStringLen(PtrVal)); 
+        SysFreeString(PtrVal); //This should be invoked whenever we are iterating. This will result in a leak when the "continue" statements are hit.
 
+        //Why not use { } syntax to intialize this?
         ThirdPartyAVSoftware thirdPartyAVSoftware;
         thirdPartyAVSoftware.Name = displayName;
         thirdPartyAVSoftware.DefinitionStatus = definitionState;
         thirdPartyAVSoftware.DefinitionUpdateTime = timestamp;
-        thirdPartyAVSoftware.Description = state;
+        thirdPartyAVSoftware.Description = state; //Inteded to be the same as below?
         thirdPartyAVSoftware.ProductState = state;
         thirdPartyAVSoftwareMap[thirdPartyAVSoftware.Name] = thirdPartyAVSoftware;
 

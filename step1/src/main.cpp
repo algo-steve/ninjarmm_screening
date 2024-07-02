@@ -14,7 +14,7 @@ namespace fs = std::filesystem;
 using vec2dstrings = std::vector<std::vector<std::string>>;
 
 class Job // requirement a
-{ 
+{
   public:
     virtual void Work() const = 0;
     virtual void TakeBreak() const = 0;
@@ -24,7 +24,7 @@ class Job // requirement a
 };
 
 class Pilot : public Job // requirement c
-{ 
+{
   public:
     // requirement d
     void Work() const override
@@ -49,7 +49,7 @@ class Pilot : public Job // requirement c
 };
 
 class Programmer : public Job // requirement b
-{ 
+{
   public:
     void Work() const override
     {
@@ -202,9 +202,9 @@ struct reverse<Container<List...>>
                                                List...>::template type<>;
 };
 
-struct Test
+struct Test // a silly arbitrary type
 {
-}; // aa silly arbitrary type
+};
 
 int main()
 {
