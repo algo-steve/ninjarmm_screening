@@ -37,5 +37,9 @@ int main()
               << (IsInBounds<uint32_t>(httpResponseCode, 500, 599) ? "true" : "false") << std::endl;
 
 
+     //requirement i + (i/ii)
+    auto theStrings = std::vector<std::string>{"one", "two", "test"};
+    auto count = ContainsTheString([](const std::string& tested) { return tested == "test"; }, theStrings);
+    std::cout << "Number of 'test' strings: " << count << std::endl;
     return 0;
 }
