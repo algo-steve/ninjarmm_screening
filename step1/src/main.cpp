@@ -9,6 +9,8 @@
 #include "programmer.h"
 #include "pilot.h"
 
+using vec2dstrings = std::vector<std::vector<std::string>>;
+
 template <typename T>
 bool IsInBounds(T value, T lower, T upper) {
     return value >= lower && value <= upper;
@@ -27,9 +29,9 @@ void writeExampleCSV(const std::string& filename) {
     file.close();
 }
 
-std::vector<std::vector<std::string>> readCSV(const std::string& filename) {
+vec2dstrings readCSV(const std::string& filename) {
     std::ifstream file(filename);
-    std::vector<std::vector<std::string>> data;
+    vec2dstrings data;
     std::string line;
     while (std::getline(file, line)) {
         std::istringstream s(line);
@@ -40,6 +42,17 @@ std::vector<std::vector<std::string>> readCSV(const std::string& filename) {
         }
     }
     return data;
+}
+
+vec2dstrings transpose(const vec2dstrings& data) {
+    if (data.empty()) return {};
+    vec2dstrings transposed(data[0].size(), std::vector<std::string>(data.size()));
+    for (auto i = 0; i < data.size(); ++i) {
+        for (auto j = 0; j < data[i].size(); ++j) {
+            transposed[j][i] = data[i][j];
+        }
+    }
+    return transposed;
 }
 
 int main()
