@@ -248,4 +248,97 @@ int main()
     return 0;
 }
 
-// TODO - unit tests
+
+/* Unit Tests Pseudocode 
+#include <cassert>
+#include <iostream>
+
+
+void testPilotClass()
+{
+    Pilot pilot;
+
+    std::ostringstream out;
+    std::streambuf *oldCoutBuf = std::cout.rdbuf(out.rdbuf()); //Don't use standard out
+
+    pilot.Work();
+    assert(out.str() == "Pilot is flying.\n");
+    out.str(""); //Clear output buffer
+
+    pilot.TakeBreak();
+    assert(out.str() == "Pilot is taking a rest.\n");
+    out.str(""); //Clear output buffert
+
+    pilot.Train();
+    assert(out.str() == "Pilot is attending a safety briefing.\n");
+    out.str(""); //Clear output buffer
+
+    pilot.GetSalary();
+    assert(out.str() == "Pilot received salary.\n");
+
+    // Restor standard out -> this should probably be part of a test start up and tear down. But you
+    // get the idea.
+    std::cout.rdbuf(oldCoutBuf);
+}
+
+void testProgrammerClass()
+{
+ // Repeat the same pattern as in pilot above ^
+}
+
+void testIsInBounds()
+{
+    assert(IsInBounds(503, 500, 599) == true);
+    assert(IsInBounds(200, 500, 599) == false);
+}
+
+void testContainsTheString()
+{
+    std::vector<std::string> strings = {"one", "two", "test"};
+    assert(ContainsTheString([](const std::string &s) { return s == "test"; }, strings) == 1);
+    assert(ContainsTheString([](const std::string &s) { return s == "four"; }, strings) == 0);
+}
+
+void testCSVFunctions()
+{
+    std::string inputFile = "example.csv";
+    std::string outputFile = "transposed_example.csv";
+
+    writeExampleCSV(inputFile);
+    auto data = readCSV(inputFile);
+
+    assert(data.size() == 4);
+    assert(data[0] == std::vector<std::string>{"id", "type", "name"});
+    assert(data[1] == std::vector<std::string>{"0", "bird", "blue"});
+    assert(data[2] == std::vector<std::string>{"1", "cat", "felix"});
+    assert(data[3] == std::vector<std::string>{"2", "dog", "toto"});
+
+    auto transposedData = transpose(data);
+    writeCSV(outputFile, transposedData);
+
+    auto transposedRead = readCSV(outputFile);
+
+    assert(transposedRead.size() == 3);
+    assert(transposedRead[0] == std::vector<std::string>{"id", "0", "1", "2"});
+    assert(transposedRead[1] == std::vector<std::string>{"type", "bird", "cat", "dog"});
+    assert(transposedRead[2] == std::vector<std::string>{"name", "blue", "felix", "toto"});
+}
+
+void runTests()
+{
+    testPilotClass();
+    testProgrammerClass(); // TODO
+    testIsInBounds();
+    testContainsTheString();
+    testCSVFunctions();
+    std::cout << "All tests passed!\n"; // A framework should really do this part but it's fine.
+}
+
+int main()
+{
+    runTests();
+    return 0;
+}
+
+
+*/
